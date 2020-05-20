@@ -1,0 +1,73 @@
+﻿@model IEnumerable<Item>
+
+@{
+    ViewData["Title"] = "Main";
+}
+
+<div>
+    <p>Total items: <span id="amount"></span></p>
+    <p>Total price: <span id="price"></span></p>
+    <button class="btn btn-primary" style="width: 100px" href="#" id="goToCard" onclick="goToCart()">Buy</button>
+    <button class="btn btn-danger" href="#" onclick="clearCart()">Clear</button>
+</div>
+<hr />
+<div class="row my-2">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-3 p-2">
+            <div class="card">
+                <img class="card-img-top mx-auto" src="~/doc.png" />
+                <hr class="mb-0" />
+                <div class="card-body">
+                    <h4>@item.Name</h4>
+                    <p>Price: @item.Price.ToString("c")</p>
+                </div>
+                <div class="card-footer text-center">
+                    <button class="btn btn-success" id="@item.Id" onclick="addToCart(@item.Id, @item.Price)">Add to cart</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts
+{
+    <script>
+        const items = [];
+        let totalPrice = 0;
+
+        function addToCart(id, price) {
+            items.push(id);
+            totalPrice += price;
+            $(`#${id}`).text('Added');
+            $(`#${id}`).prop('disabled', true);
+            updateAmount(price);
+        }
+
+        function updateAmount() {
+            $('#amount').text(items.length);
+            $('#price').text(totalPrice);
+            $('#goToCard').prop('disabled', items.length === 0);
+        }
+
+        function clearCart() {
+            items.forEach(x => {
+                $(`#${x}`).text('Add to cart');
+                $(`#${x}`).prop('disabled', false);
+            });
+            items.length = 0;
+            totalPrice = 0;
+            updateAmount();
+        }
+
+        function goToCart() {
+            const param = items.join('|');
+            window.location.href = `http://localhost:5000/Home/Cart/?items=${param}`;
+        }
+
+        $(document).ready(() => {
+            updateAmount();
+        });
+
+    </script>
+}

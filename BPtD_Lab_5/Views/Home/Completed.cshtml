@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewData["Title"] = "Completed";
+}
+
+<h1>Completed</h1>
+<hr class="mb-1"/>
+
+@if ((bool)ViewData["Success"])
+{
+    <h3>@ViewData["Message"]</h3>
+    <p>Order id: @ViewData["OrderId"]</p>
+    <p>Transaction id: @ViewData["TransactionId"]</p>
+}
+else
+{
+    <h2>Sorry, payment operation failed</h2>
+}
